@@ -149,7 +149,8 @@ export async function fetchIngredientsData() {
       const { data, error } = await client
         .from('ingredients_network')
         .select('*')
-        .order('id', { ascending: true });
+        .order('id', { ascending: true })
+        .range(0, 2000);
 
       if (!error && data && data.length > 0) {
         return {

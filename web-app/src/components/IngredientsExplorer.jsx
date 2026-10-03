@@ -14,6 +14,12 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
   const [sortOrder, setSortOrder] = useState('asc');
   const [viewMode, setViewMode] = useState('table');
   const [selectedCompany, setSelectedCompany] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 50;
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedActivity, herbsOnly, cognitiveOnly, deliveryOnly, sortBy, sortOrder]);
 
   const activities = useMemo(() => {
     const list = Array.from(new Set(data.map(d => d.primary_business_activity).filter(Boolean)));
@@ -58,6 +64,12 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
       return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
     });
   }, [data, search, selectedActivity, herbsOnly, cognitiveOnly, deliveryOnly, sortBy, sortOrder]);
+
+  const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredData.slice(start, start + pageSize);
+  }, [filteredData, currentPage, pageSize]);
 
   const handleSort = (field) => {
     if (sortBy === field) {
@@ -280,7 +292,7 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
                 </tr>
               </thead>
               <tbody>
-                {filteredData.map((item) => (
+                {paginatedData.map((item) => (
                   <tr key={item.id} onClick={() => setSelectedCompany(item)}>
                     <td>
                       <strong style={{ color: 'var(--ink)' }}>{item.company_name}</strong>
@@ -376,7 +388,7 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
       ) : (
         /* View: Cards */
         <div className="cards-grid">
-          {filteredData.map((item) => (
+          {paginatedData.map((item) => (
             <div key={item.id} className="feature-card" onClick={() => setSelectedCompany(item)}>
               <div className="card-media" style={{ height: '130px' }}>
                 <img src={item.logo_url} alt={item.company_name} loading="lazy" />
@@ -426,6 +438,47 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Pagination Bar */}
+      {totalPages > 1 && (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: '18px',
+          padding: '12px 16px',
+          background: 'var(--canvas-elevated)',
+          border: '1px solid var(--hairline)',
+          borderRadius: 'var(--rounded-md)',
+          fontSize: '13px'
+        }}>
+          <span style={{ color: 'var(--ink-muted)' }}>
+            Showing <strong>{(currentPage - 1) * pageSize + 1}</strong> – <strong>{Math.min(currentPage * pageSize, filteredData.length)}</strong> of <strong>{filteredData.length}</strong> suppliers
+          </span>
+
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button
+              className="button-utility"
+              onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              style={{ opacity: currentPage === 1 ? 0.5 : 1, cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+            >
+              Previous
+            </button>
+            <span style={{ fontWeight: 600, padding: '0 8px' }}>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              className="button-utility"
+              onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              style={{ opacity: currentPage === totalPages ? 0.5 : 1, cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
 
