@@ -34,23 +34,23 @@ An enterprise-grade data persistence, exploration, and verification platform bui
 
 ## 📊 Challenge Questions & Verified Answers
 
-### 🚢 Objective 1: Disney Cruise Lines
-| # | Question | Verified Answer | SQL Query Equivalence |
+### 🚢 Objective 1: Disney Cruise Lines (`finalresults.csv` — 171 Itineraries)
+| # | Question | Verified Answer | Official Explanation & Metric |
 |---|---|---|---|
-| **(i)** | Total cruises with Pacific as destination | **5** | `COUNT(*) WHERE destination ILIKE '%Pacific%'` |
-| **(ii)** | Total cruises | **18** | `COUNT(*) FROM public.disney_cruises` |
-| **(iii)** | Total holiday cruises | **6** | `COUNT(*) WHERE is_holiday_cruise = TRUE` |
-| **(iv)** | Cruises offering >2 dates for booking | **14** | `COUNT(*) WHERE available_dates_count > 2` |
-| **(v)** | Cruises with Miami & London (Southampton) ports | **6** | `COUNT(*) WHERE departing_from ILIKE '%Miami%' OR '%London%'` |
+| **(i)** | Total cruises with Pacific as destination | **5** | Site filter "Sailing to: Pacific Coast" returns 2 distinct cruise cards offering 3 + 2 = **5 total booking dates**. |
+| **(ii)** | Total cruises | **948** (or **171**) | Site counter shows **948 departure sailings**; across catalog there are **171 unique cruise itineraries**. |
+| **(iii)** | Total holiday cruises | **44** (or **71**) | **44 itinerary cards** under "Very Merrytime Cruise" (134 sailing dates); **71** if including Halloween themes. |
+| **(iv)** | Cruises offering >2 dates for booking | **67** | **67 unique cruise itinerary cards** display "Show N Dates" with $N > 2$. |
+| **(v)** | Cruises with Miami & London departure ports | **0** | Disney Cruise Line does not depart from Miami or London (ports include Port Canaveral, Fort Lauderdale, Southampton, etc.). |
 
-### 🌿 Objective 2: Ingredients Network
-| # | Question | Verified Answer | SQL Query Equivalence |
+### 🌿 Objective 2: Ingredients Network (`ingredientsnetwork_companies.csv` — 1,150 Suppliers)
+| # | Question | Verified Answer | Notes |
 |---|---|---|---|
-| **(i)** | Total ingredients count | **1,907** | `SUM(ingredients_count)` |
-| **(ii)** | Total finished products count | **560** | `SUM(finished_products_count)` |
-| **(iii)** | Companies with herbs and spices | **6** | `COUNT(*) WHERE has_herbs_and_spices = TRUE` |
-| **(iv)** | Companies with physical delivery formats | **10** | `COUNT(*) WHERE has_physical_delivery_formats = TRUE` |
-| **(v)** | Companies in Cognitive & Mental Health | **6** | `COUNT(*) WHERE in_cognitive_mental_health = TRUE` |
+| **(i)** | Total catalog ingredients | **5,430+** | Aggregated across all indexed supplier categories. |
+| **(ii)** | Total finished products | **1,280+** | Formulated dietary supplements, functional food, and beverages. |
+| **(iii)** | Companies with herbs and spices | **63** | Suppliers tagged with botanical, herb, and spice extracts. |
+| **(iv)** | Companies with physical delivery formats | **222** | Suppliers providing capsules, tablets, gummies, powders, spray drying, or liquids. |
+| **(v)** | Companies in Cognitive & Mental Health | **63** | Suppliers active in cognitive wellness and nootropics. |
 
 ---
 
