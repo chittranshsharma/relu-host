@@ -108,14 +108,14 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
               structured with persistence to Supabase and clean export compliance.
             </p>
             <div className="hero-stickers-row">
-              <span className="sticker-tag green">
-                <Sparkles size={12} /> Objective 2
+              <span className={source === 'supabase' ? 'source-badge-live' : 'source-badge-local'}>
+                {source === 'supabase' ? '● Supabase Cloud Live' : '○ Local Verified Cache'}
               </span>
-              <span className="sticker-tag teal">
-                Source: {source === 'supabase' ? 'Supabase Cloud Table' : 'Local Verified Cache'}
+              <span className="sticker-tag green">
+                {kpis.totalCompanies} Active Suppliers
               </span>
               <span className="sticker-tag orange">
-                {kpis.herbsCount} Herbs & Spices
+                {kpis.herbsCount} Herbs &amp; Spices
               </span>
               <span className="sticker-tag purple">
                 {kpis.cognitiveCount} Cognitive Health
@@ -125,7 +125,7 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
 
           <div className="hero-actions">
             <button className="button-secondary" onClick={handleExportCSV}>
-              <Download size={15} /> Export CSV
+              <Download size={15} /> Export Clean CSV
             </button>
             <button 
               className="button-primary" 
@@ -146,7 +146,7 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
             <span className="kpi-sticker-dot" style={{ background: 'var(--accent-green)' }} />
           </div>
           <div className="kpi-value">{kpis.totalIngredients.toLocaleString()}</div>
-          <div className="kpi-subtitle">Question (i) aggregated count</div>
+          <div className="kpi-subtitle">Indexed catalog ingredients</div>
         </div>
 
         <div className="kpi-card">
@@ -155,16 +155,16 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
             <span className="kpi-sticker-dot" style={{ background: 'var(--accent-sky)' }} />
           </div>
           <div className="kpi-value">{kpis.totalFinished.toLocaleString()}</div>
-          <div className="kpi-subtitle">Question (ii) aggregated count</div>
+          <div className="kpi-subtitle">Formulated market products</div>
         </div>
 
         <div className="kpi-card">
           <div className="kpi-header">
-            <span className="kpi-title">Herbs & Spices</span>
+            <span className="kpi-title">Herbs &amp; Spices</span>
             <span className="kpi-sticker-dot" style={{ background: 'var(--accent-orange)' }} />
           </div>
           <div className="kpi-value">{kpis.herbsCount} / {kpis.totalCompanies}</div>
-          <div className="kpi-subtitle">Question (iii) suppliers</div>
+          <div className="kpi-subtitle">Active botanical suppliers</div>
         </div>
 
         <div className="kpi-card">
@@ -173,16 +173,16 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
             <span className="kpi-sticker-dot" style={{ background: 'var(--accent-teal)' }} />
           </div>
           <div className="kpi-value">{kpis.deliveryCount} / {kpis.totalCompanies}</div>
-          <div className="kpi-subtitle">Question (iv) suppliers</div>
+          <div className="kpi-subtitle">Dosage &amp; encapsulation tech</div>
         </div>
 
         <div className="kpi-card">
           <div className="kpi-header">
-            <span className="kpi-title">Cognitive & Mental Health</span>
+            <span className="kpi-title">Cognitive &amp; Mental Health</span>
             <span className="kpi-sticker-dot" style={{ background: 'var(--accent-purple)' }} />
           </div>
           <div className="kpi-value">{kpis.cognitiveCount} / {kpis.totalCompanies}</div>
-          <div className="kpi-subtitle">Question (v) suppliers</div>
+          <div className="kpi-subtitle">Nootropics &amp; wellness sector</div>
         </div>
       </div>
 
@@ -522,3 +522,4 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
     </div>
   );
 }
+

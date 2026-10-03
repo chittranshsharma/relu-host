@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import DisneyCruisesExplorer from './components/DisneyCruisesExplorer';
 import IngredientsExplorer from './components/IngredientsExplorer';
-import ChallengeAnswersView from './components/ChallengeAnswersView';
 import SupabaseConsoleTab from './components/SupabaseConsoleTab';
 import SupabaseSyncModal from './components/SupabaseSyncModal';
 import { 
@@ -118,13 +117,6 @@ export default function App() {
             source={sourceIng}
             onSyncSupabase={handleSyncSupabase}
             isSyncing={isSyncing}
-          />
-        )}
-
-        {activeTab === 'answers' && (
-          <ChallengeAnswersView
-            disneyData={disneyData}
-            ingredientsData={ingredientsData}
           />
         )}
 

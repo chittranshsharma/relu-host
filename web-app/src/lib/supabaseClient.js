@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import localDisneyData from '../data/disney_cruises.json';
+import localFinalResults from '../data/finalresults.json';
+import localDisneySample from '../data/disney_cruises.json';
 import localIngredientsData from '../data/ingredients_network.json';
 
 const STORAGE_KEY_URL = 'relu_supabase_url';
@@ -95,6 +96,22 @@ export async function fetchDisneyCruisesData() {
   const client = getSupabaseClient();
   if (client) {
     try {
+      // First try real finalresults table (171 rows)
+      const { data: finalData, error: finalError } = await client
+        .from('disney_cruises_final')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (!finalError && finalData && finalData.length > 0) {
+        return {
+          source: 'supabase',
+          table: 'disney_cruises_final',
+          data: finalData,
+          error: null
+        };
+      }
+
+      // If disney_cruises_final wasn't populated, check legacy sample table
       const { data, error } = await client
         .from('disney_cruises')
         .select('*')
@@ -103,6 +120,7 @@ export async function fetchDisneyCruisesData() {
       if (!error && data && data.length > 0) {
         return {
           source: 'supabase',
+          table: 'disney_cruises',
           data,
           error: null
         };
@@ -115,10 +133,11 @@ export async function fetchDisneyCruisesData() {
     }
   }
 
-  // Graceful fallback to verified scraped dataset
+  // Graceful fallback to verified scraped dataset (171 real results)
   return {
     source: 'local',
-    data: localDisneyData,
+    table: 'finalresults.json',
+    data: localFinalResults || localDisneySample,
     error: null
   };
 }

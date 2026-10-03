@@ -914,3 +914,133 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* =====================================================================
+   Animations & Micro-interactions
+   ===================================================================== */
+
+/* Pulsing live dot for connected Supabase status */
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(26, 174, 57, 0.6); }
+  60%  { box-shadow: 0 0 0 5px rgba(26, 174, 57, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(26, 174, 57, 0); }
+}
+
+.status-dot.connected {
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+/* KPI card fade-up entrance */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.kpi-card {
+  animation: fade-up 300ms ease both;
+}
+
+.kpi-card:nth-child(1) { animation-delay: 0ms; }
+.kpi-card:nth-child(2) { animation-delay: 50ms; }
+.kpi-card:nth-child(3) { animation-delay: 100ms; }
+.kpi-card:nth-child(4) { animation-delay: 150ms; }
+.kpi-card:nth-child(5) { animation-delay: 200ms; }
+
+/* Sharper KPI card hover with shadow lift */
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 4px 8px rgba(0,0,0,0.04),
+    0 12px 28px rgba(0,0,0,0.07);
+  border-color: #d0d0d0;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+/* Hero band shimmer sweep */
+@keyframes shimmer-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.hero-band {
+  background: linear-gradient(135deg, var(--secondary) 0%, #2b3d9b 60%, #1a2870 100%);
+}
+
+.hero-band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--rounded-xl);
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.06) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 4s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Table row hover — cleaner highlight */
+.data-table tbody tr:hover {
+  background: rgba(0, 117, 222, 0.04) !important;
+  transition: background 80ms ease;
+}
+
+/* QA answer pill pop-in */
+@keyframes pop-in {
+  0%   { transform: scale(0.85); opacity: 0; }
+  70%  { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.qa-pill {
+  animation: pop-in 350ms cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+/* Source badge glow when live */
+.source-badge-live {
+  background: rgba(26, 174, 57, 0.15);
+  color: #0d6e22;
+  border: 1px solid rgba(26, 174, 57, 0.35);
+  border-radius: var(--rounded-full);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.source-badge-local {
+  background: rgba(221, 91, 0, 0.12);
+  color: #793400;
+  border: 1px solid rgba(221, 91, 0, 0.3);
+  border-radius: var(--rounded-full);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Button primary shimmer on hover */
+.button-primary:hover {
+  background: var(--primary-active);
+  box-shadow: 0 4px 14px rgba(0, 117, 222, 0.35);
+}
+
+/* Card grid entrance for QA */
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.qa-card {
+  animation: slide-in 280ms ease both;
+}
+
+.qa-card:nth-child(2) { animation-delay: 80ms; }

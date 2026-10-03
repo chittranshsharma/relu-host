@@ -31,13 +31,6 @@ export default function Navbar({ activeTab, setActiveTab, supabaseStatus, onOpen
             <span>Ingredients Network</span>
           </button>
           <button
-            className={`tab-btn ${activeTab === 'answers' ? 'active' : ''}`}
-            onClick={() => setActiveTab('answers')}
-          >
-            <CheckCircle2 size={15} />
-            <span>Challenge Answers</span>
-          </button>
-          <button
             className={`tab-btn ${activeTab === 'supabase' ? 'active' : ''}`}
             onClick={() => setActiveTab('supabase')}
           >
