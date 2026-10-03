@@ -1,0 +1,22 @@
+{
+  "name": "relu-data-extraction-hiring-challenge",
+  "version": "1.0.0",
+  "description": "Relu Consultancy FTE Data Extraction Challenge - Full Scraper Pipeline, Persistence & Dynamic Web App",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix web-app run dev",
+    "build": "npm --prefix web-app run build",
+    "preview": "npm --prefix web-app run preview",
+    "seed": "python scripts/seed_supabase.py"
+  },
+  "keywords": [
+    "relu-consultancy",
+    "data-extraction",
+    "supabase",
+    "web-scraping",
+    "react",
+    "vite"
+  ],
+  "author": "Candidate",
+  "license": "MIT"
+}
