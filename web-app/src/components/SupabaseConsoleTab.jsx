@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  Database, ShieldCheck, Check, Copy, ExternalLink, RefreshCw, 
-  UploadCloud, AlertCircle, Key, Globe, Terminal, Sparkles, Layers, ArrowUpRight 
+  Database, Check, Copy, RefreshCw, 
+  UploadCloud, AlertCircle, Key, Layers, ArrowUpRight, Terminal, Sparkles 
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { 
@@ -144,59 +144,57 @@ CREATE POLICY "Allow public insert ingredients" ON public.ingredients_network FO
   };
 
   return (
-    <div className="section-container">
-      {/* Hero */}
-      <div className="hero-banner">
-        <div className="hero-info">
-          <h2>
-            <Database size={24} style={{ color: 'var(--accent-cyan)' }} />
-            Supabase Cloud Persistence Engine
-          </h2>
-          <p>
-            Seamless real-time synchronization between the web scraper pipelines, relational Supabase PostgreSQL tables,
-            and the interactive client presentation layer.
-          </p>
-          <div className="hero-meta-badges">
-            <span className="meta-badge highlight">
-              <Sparkles size={12} /> Bonus Challenge
-            </span>
-            <span className="meta-badge">
-              Status: <strong>{supabaseStatus?.connected ? 'Connected to Cloud' : 'Ready (Local Cache Active)'}</strong>
-            </span>
-            <span className="meta-badge">
-              Latency: {supabaseStatus?.latencyMs || 0}ms
-            </span>
+    <div>
+      {/* Deep Indigo Hero Band */}
+      <div className="hero-band">
+        <div className="hero-content">
+          <div className="hero-text">
+            <h2>Supabase Cloud Persistence Engine</h2>
+            <p>
+              Direct live connection to PostgreSQL tables, Row-Level Security policies, and bidirectional
+              synchronization between client-side caches and Supabase cloud.
+            </p>
+            <div className="hero-stickers-row">
+              <span className="sticker-tag sky">
+                <Sparkles size={12} /> Bonus Challenge
+              </span>
+              <span className="sticker-tag green">
+                Status: {supabaseStatus?.connected ? 'Connected to Cloud' : 'Ready (Local Cache Active)'}
+              </span>
+              <span className="sticker-tag purple">
+                Latency: {supabaseStatus?.latencyMs || 0}ms
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <a
-            href="https://supabase.com/dashboard"
-            target="_blank"
-            rel="noreferrer"
-            className="btn btn-secondary"
-          >
-            <span>Supabase Console</span>
-            <ArrowUpRight size={14} />
-          </a>
+          <div className="hero-actions">
+            <a
+              href="https://supabase.com/dashboard"
+              target="_blank"
+              rel="noreferrer"
+              className="button-secondary"
+            >
+              <span>Supabase Console</span>
+              <ArrowUpRight size={13} />
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* Grid: Credentials & Status on Left, Schema & Sync on Right */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: '20px' }}>
         {/* Left Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Card: Connection Manager */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Credentials Manager */}
           <div className="qa-card">
             <div className="qa-card-header">
               <h3>
-                <Key size={18} style={{ color: 'var(--accent-cyan)' }} />
-                <span>Cloud Credentials Configuration</span>
+                <Key size={16} style={{ display: 'inline', marginRight: '8px', color: 'var(--primary)' }} />
+                <span>Supabase Credentials</span>
               </h3>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Supabase Project URL</label>
+              <label className="form-label">Project URL</label>
               <input
                 type="text"
                 className="form-input"
@@ -207,7 +205,7 @@ CREATE POLICY "Allow public insert ingredients" ON public.ingredients_network FO
             </div>
 
             <div className="form-group">
-              <label className="form-label">Supabase Anon Public API Key</label>
+              <label className="form-label">Anon Public Key</label>
               <input
                 type="password"
                 className="form-input"
@@ -217,20 +215,20 @@ CREATE POLICY "Allow public insert ingredients" ON public.ingredients_network FO
               />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button className="btn btn-primary" onClick={handleSave}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button className="button-primary" onClick={handleSave}>
                   Save & Connect
                 </button>
-                <button className="btn btn-secondary" onClick={handleTestConnection} disabled={isTesting}>
-                  <RefreshCw size={14} className={isTesting ? 'animate-spin' : ''} />
-                  {isTesting ? 'Testing...' : 'Test Connection'}
+                <button className="button-utility" onClick={handleTestConnection} disabled={isTesting}>
+                  <RefreshCw size={13} className={isTesting ? 'animate-spin' : ''} />
+                  {isTesting ? 'Testing...' : 'Test Ping'}
                 </button>
               </div>
 
               {currentCreds.isCustom && (
-                <button className="btn btn-ghost" onClick={handleClear} style={{ color: 'var(--accent-rose)' }}>
-                  Clear Custom Keys
+                <button className="button-utility" onClick={handleClear} style={{ color: 'var(--accent-orange)' }}>
+                  Clear Custom
                 </button>
               )}
             </div>
@@ -239,23 +237,23 @@ CREATE POLICY "Allow public insert ingredients" ON public.ingredients_network FO
               <div
                 style={{
                   marginTop: '12px',
-                  padding: '12px 14px',
-                  borderRadius: 'var(--radius-sm)',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--rounded-xs)',
                   fontSize: '13px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px',
-                  background: testResult.success ? 'rgba(16, 185, 129, 0.12)' : 'rgba(244, 63, 94, 0.12)',
-                  border: `1px solid ${testResult.success ? 'rgba(16, 185, 129, 0.3)' : 'rgba(244, 63, 94, 0.3)'}`,
-                  color: testResult.success ? 'var(--accent-emerald)' : 'var(--accent-rose)'
+                  gap: '8px',
+                  background: testResult.success ? '#e7f8eb' : '#ffedf8',
+                  border: `1px solid ${testResult.success ? '#bceec6' : '#ffc2eb'}`,
+                  color: testResult.success ? '#0d6e22' : '#b30074'
                 }}
               >
-                {testResult.success ? <Check size={16} /> : <AlertCircle size={16} />}
+                {testResult.success ? <Check size={15} /> : <AlertCircle size={15} />}
                 <div style={{ flex: 1 }}>
-                  <strong>{testResult.success ? 'Connected' : 'Connection Failed'}:</strong>{' '}
+                  <strong>{testResult.success ? 'Connected' : 'Error'}:</strong>{' '}
                   {testResult.message}
                   {testResult.latencyMs > 0 && (
-                    <span style={{ marginLeft: '8px', color: 'var(--text-muted)' }}>
+                    <span style={{ marginLeft: '6px', color: 'var(--ink-muted)' }}>
                       ({testResult.latencyMs}ms)
                     </span>
                   )}
@@ -264,52 +262,50 @@ CREATE POLICY "Allow public insert ingredients" ON public.ingredients_network FO
             )}
           </div>
 
-          {/* Card: Table Status Overview */}
+          {/* Table States */}
           <div className="qa-card">
             <div className="qa-card-header">
               <h3>
-                <Layers size={18} style={{ color: 'var(--accent-indigo)' }} />
+                <Layers size={16} style={{ display: 'inline', marginRight: '8px', color: 'var(--primary)' }} />
                 <span>Persistent Table States</span>
               </h3>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div className="question-item">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div className="qa-row">
                 <div>
-                  <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>public.disney_cruises</div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                    Active data source: {sourceDisney === 'supabase' ? 'Supabase Table' : 'Local verified fallback'}
+                  <div style={{ fontWeight: 600, color: 'var(--ink)' }}>public.disney_cruises</div>
+                  <div style={{ fontSize: '11px', color: 'var(--ink-muted)' }}>
+                    Active: {sourceDisney === 'supabase' ? 'Supabase Cloud Table' : 'Local Cache'}
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span className="badge badge-cyan">{disneyData.length} rows</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className="badge-pill sky">{disneyData.length} rows</span>
                   <button
-                    className="btn btn-secondary"
-                    style={{ padding: '5px 10px', fontSize: '11px' }}
+                    className="button-utility"
                     onClick={handleSyncDisney}
                     disabled={isSyncingDisney}
                   >
-                    <UploadCloud size={13} /> {isSyncingDisney ? 'Pushing...' : 'Push to DB'}
+                    <UploadCloud size={13} /> {isSyncingDisney ? 'Pushing...' : 'Sync'}
                   </button>
                 </div>
               </div>
 
-              <div className="question-item">
+              <div className="qa-row">
                 <div>
-                  <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>public.ingredients_network</div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                    Active data source: {sourceIng === 'supabase' ? 'Supabase Table' : 'Local verified fallback'}
+                  <div style={{ fontWeight: 600, color: 'var(--ink)' }}>public.ingredients_network</div>
+                  <div style={{ fontSize: '11px', color: 'var(--ink-muted)' }}>
+                    Active: {sourceIng === 'supabase' ? 'Supabase Cloud Table' : 'Local Cache'}
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span className="badge badge-emerald">{ingredientsData.length} rows</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className="badge-pill green">{ingredientsData.length} rows</span>
                   <button
-                    className="btn btn-secondary"
-                    style={{ padding: '5px 10px', fontSize: '11px' }}
+                    className="button-utility"
                     onClick={handleSyncIngredients}
                     disabled={isSyncingIng}
                   >
-                    <UploadCloud size={13} /> {isSyncingIng ? 'Pushing...' : 'Push to DB'}
+                    <UploadCloud size={13} /> {isSyncingIng ? 'Pushing...' : 'Sync'}
                   </button>
                 </div>
               </div>
@@ -318,11 +314,13 @@ CREATE POLICY "Allow public insert ingredients" ON public.ingredients_network FO
             {syncMessage && (
               <div
                 style={{
-                  padding: '10px 14px',
-                  borderRadius: 'var(--radius-sm)',
+                  marginTop: '10px',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--rounded-xs)',
                   fontSize: '13px',
-                  background: syncMessage.type === 'success' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(244, 63, 94, 0.12)',
-                  color: syncMessage.type === 'success' ? 'var(--accent-emerald)' : 'var(--accent-rose)'
+                  background: syncMessage.type === 'success' ? '#e7f8eb' : '#ffedf8',
+                  color: syncMessage.type === 'success' ? '#0d6e22' : '#b30074',
+                  border: `1px solid ${syncMessage.type === 'success' ? '#bceec6' : '#ffc2eb'}`
                 }}
               >
                 {syncMessage.text}
@@ -335,21 +333,21 @@ CREATE POLICY "Allow public insert ingredients" ON public.ingredients_network FO
         <div className="qa-card">
           <div className="qa-card-header">
             <h3>
-              <Terminal size={18} style={{ color: 'var(--accent-emerald)' }} />
-              <span>Supabase SQL DDL Schema</span>
+              <Terminal size={16} style={{ display: 'inline', marginRight: '8px', color: 'var(--primary)' }} />
+              <span>Postgres DDL Schema</span>
             </h3>
-            <button className="btn btn-ghost" style={{ padding: '4px 10px', fontSize: '12px' }} onClick={handleCopySql}>
-              {copiedSql ? <Check size={13} /> : <Copy size={13} />}
-              <span>{copiedSql ? 'Copied' : 'Copy SQL'}</span>
+            <button className="button-utility" onClick={handleCopySql}>
+              {copiedSql ? <Check size={12} /> : <Copy size={12} />}
+              <span>{copiedSql ? 'Copied' : 'Copy'}</span>
             </button>
           </div>
 
-          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-            Execute this SQL script directly in your <strong>Supabase SQL Editor</strong> to create the tables,
-            indexes, and Row-Level-Security (RLS) policies.
+          <p style={{ fontSize: '13px', color: 'var(--ink-secondary)', marginBottom: '8px' }}>
+            Execute this schema in your <strong>Supabase SQL Editor</strong> to initialize tables,
+            indexes, and Row-Level Security policies.
           </p>
 
-          <pre className="code-snippet" style={{ maxHeight: '420px', overflowY: 'auto' }}>
+          <pre className="code-box" style={{ maxHeight: '380px' }}>
             {schemaSql}
           </pre>
         </div>

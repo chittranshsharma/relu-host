@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { 
-  Search, Filter, Download, UploadCloud, LayoutGrid, Table as TableIcon, 
-  ExternalLink, Mail, Phone, MapPin, Leaf, Sparkles, Building2, Eye, X, Check, Globe 
+  Search, Download, UploadCloud, LayoutGrid, Table as TableIcon, 
+  ExternalLink, Mail, Phone, MapPin, Leaf, Sparkles, Building2, Eye, X, Globe 
 } from 'lucide-react';
 
 export default function IngredientsExplorer({ data, source, onSyncSupabase, isSyncing }) {
@@ -15,13 +15,11 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
   const [viewMode, setViewMode] = useState('table');
   const [selectedCompany, setSelectedCompany] = useState(null);
 
-  // Derived filter activities
   const activities = useMemo(() => {
     const list = Array.from(new Set(data.map(d => d.primary_business_activity).filter(Boolean)));
     return ['ALL', ...list.sort()];
   }, [data]);
 
-  // KPIs
   const kpis = useMemo(() => {
     const totalCompanies = data.length;
     const totalIngredients = data.reduce((acc, d) => acc + (Number(d.ingredients_count) || 0), 0);
@@ -29,11 +27,9 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
     const herbsCount = data.filter(d => d.has_herbs_and_spices).length;
     const deliveryCount = data.filter(d => d.has_physical_delivery_formats).length;
     const cognitiveCount = data.filter(d => d.in_cognitive_mental_health).length;
-
     return { totalCompanies, totalIngredients, totalFinished, herbsCount, deliveryCount, cognitiveCount };
   }, [data]);
 
-  // Filtering & Sorting
   const filteredData = useMemo(() => {
     return data.filter(item => {
       const q = search.toLowerCase();
@@ -54,7 +50,6 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
     }).sort((a, b) => {
       let valA = a[sortBy];
       let valB = b[sortBy];
-
       if (typeof valA === 'number' && typeof valB === 'number') {
         return sortOrder === 'asc' ? valA - valB : valB - valA;
       }
@@ -79,7 +74,6 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
       'Company Name', 'Company Description', 'Sales Markets', 'Primary Business Activity',
       'Categories', 'Events', 'Address', 'Email', 'Telephone', 'Website'
     ];
-
     const rows = filteredData.map(d => [
       `"${(d.company_name || '').replace(/"/g, '""')}"`,
       `"${(d.company_description || '').replace(/"/g, '""')}"`,
@@ -92,7 +86,6 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
       `"${(d.telephone || '').replace(/"/g, '""')}"`,
       `"${(d.website || '').replace(/"/g, '""')}"`
     ]);
-
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
@@ -104,62 +97,62 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
   };
 
   return (
-    <div className="section-container">
-      {/* Hero Banner */}
-      <div className="hero-banner">
-        <div className="hero-info">
-          <h2>
-            <Leaf className="text-emerald" size={24} style={{ color: 'var(--accent-emerald)' }} />
-            Ingredients & Finished Products Network
-          </h2>
-          <p>
-            Comprehensive supplier intelligence extracted from ingredientsnetwork.com, capturing full company
-            profiles, delivery formats, health & wellness verticals, and direct buyer contact information.
-          </p>
-          <div className="hero-meta-badges">
-            <span className="meta-badge highlight" style={{ color: 'var(--accent-emerald)', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
-              <Sparkles size={12} /> Challenge Objective 2
-            </span>
-            <span className="meta-badge">
-              Active Source: <strong>{source === 'supabase' ? 'Supabase Table (ingredients_network)' : 'Local Scraped Cache'}</strong>
-            </span>
-            <span className="meta-badge">
-              Total Verified Companies: {data.length}
-            </span>
+    <div>
+      {/* Deep Indigo "Night" Hero Band */}
+      <div className="hero-band">
+        <div className="hero-content">
+          <div className="hero-text">
+            <h2>Ingredients & Finished Products Network</h2>
+            <p>
+              Scraped supplier profiles, delivery formats, and buyer contacts from ingredientsnetwork.com,
+              structured with persistence to Supabase and clean export compliance.
+            </p>
+            <div className="hero-stickers-row">
+              <span className="sticker-tag green">
+                <Sparkles size={12} /> Objective 2
+              </span>
+              <span className="sticker-tag teal">
+                Source: {source === 'supabase' ? 'Supabase Cloud Table' : 'Local Verified Cache'}
+              </span>
+              <span className="sticker-tag orange">
+                {kpis.herbsCount} Herbs & Spices
+              </span>
+              <span className="sticker-tag purple">
+                {kpis.cognitiveCount} Cognitive Health
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button className="btn btn-secondary" onClick={handleExportCSV}>
-            <Download size={15} /> Export Clean CSV
-          </button>
-          <button 
-            className="btn btn-emerald" 
-            onClick={() => onSyncSupabase('ingredients_network', data)}
-            disabled={isSyncing}
-          >
-            <UploadCloud size={15} /> {isSyncing ? 'Syncing...' : 'Sync to Supabase'}
-          </button>
+          <div className="hero-actions">
+            <button className="button-secondary" onClick={handleExportCSV}>
+              <Download size={15} /> Export CSV
+            </button>
+            <button 
+              className="button-primary" 
+              onClick={() => onSyncSupabase('ingredients_network', data)}
+              disabled={isSyncing}
+            >
+              <UploadCloud size={15} /> {isSyncing ? 'Syncing...' : 'Sync to Supabase'}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI Cards Grid */}
       <div className="kpi-grid">
         <div className="kpi-card">
           <div className="kpi-header">
             <span className="kpi-title">Total Ingredients</span>
-            <div className="kpi-icon-wrap" style={{ color: 'var(--accent-emerald)' }}><Leaf size={18} /></div>
+            <span className="kpi-sticker-dot" style={{ background: 'var(--accent-green)' }} />
           </div>
-          <div className="kpi-value" style={{ color: 'var(--accent-emerald)' }}>
-            {kpis.totalIngredients.toLocaleString()}
-          </div>
+          <div className="kpi-value">{kpis.totalIngredients.toLocaleString()}</div>
           <div className="kpi-subtitle">Question (i) aggregated count</div>
         </div>
 
         <div className="kpi-card">
           <div className="kpi-header">
             <span className="kpi-title">Finished Products</span>
-            <div className="kpi-icon-wrap"><Building2 size={18} /></div>
+            <span className="kpi-sticker-dot" style={{ background: 'var(--accent-sky)' }} />
           </div>
           <div className="kpi-value">{kpis.totalFinished.toLocaleString()}</div>
           <div className="kpi-subtitle">Question (ii) aggregated count</div>
@@ -168,45 +161,40 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
         <div className="kpi-card">
           <div className="kpi-header">
             <span className="kpi-title">Herbs & Spices</span>
-            <div className="kpi-icon-wrap"><Sparkles size={18} /></div>
+            <span className="kpi-sticker-dot" style={{ background: 'var(--accent-orange)' }} />
           </div>
-          <div className="kpi-value" style={{ color: 'var(--accent-amber)' }}>
-            {kpis.herbsCount} / {kpis.totalCompanies}
-          </div>
-          <div className="kpi-subtitle">Question (iii) company count</div>
+          <div className="kpi-value">{kpis.herbsCount} / {kpis.totalCompanies}</div>
+          <div className="kpi-subtitle">Question (iii) suppliers</div>
         </div>
 
         <div className="kpi-card">
           <div className="kpi-header">
             <span className="kpi-title">Physical Delivery Formats</span>
-            <div className="kpi-icon-wrap"><TableIcon size={18} /></div>
+            <span className="kpi-sticker-dot" style={{ background: 'var(--accent-teal)' }} />
           </div>
-          <div className="kpi-value" style={{ color: 'var(--accent-cyan)' }}>
-            {kpis.deliveryCount} / {kpis.totalCompanies}
-          </div>
-          <div className="kpi-subtitle">Question (iv) delivery forms</div>
+          <div className="kpi-value">{kpis.deliveryCount} / {kpis.totalCompanies}</div>
+          <div className="kpi-subtitle">Question (iv) suppliers</div>
         </div>
 
         <div className="kpi-card">
           <div className="kpi-header">
             <span className="kpi-title">Cognitive & Mental Health</span>
-            <div className="kpi-icon-wrap"><Sparkles size={18} /></div>
+            <span className="kpi-sticker-dot" style={{ background: 'var(--accent-purple)' }} />
           </div>
-          <div className="kpi-value" style={{ color: 'var(--accent-purple)' }}>
-            {kpis.cognitiveCount} / {kpis.totalCompanies}
-          </div>
-          <div className="kpi-subtitle">Question (v) health sector</div>
+          <div className="kpi-value">{kpis.cognitiveCount} / {kpis.totalCompanies}</div>
+          <div className="kpi-subtitle">Question (v) suppliers</div>
         </div>
       </div>
 
-      {/* Toolbar Controls */}
+      {/* Toolbar */}
       <div className="toolbar">
         <div className="toolbar-left">
-          <div className="search-box">
-            <Search className="search-icon" size={16} />
+          <div className="text-input-wrap">
+            <Search className="input-icon" size={15} />
             <input
               type="text"
-              placeholder="Search companies, ingredients, categories, or country..."
+              className="text-input"
+              placeholder="Search companies, categories, address..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -225,110 +213,108 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
           </select>
 
           <button
-            className={`btn ${herbsOnly ? 'btn-primary' : 'btn-ghost'}`}
-            style={{ padding: '6px 12px', fontSize: '12px' }}
+            className={`button-utility ${herbsOnly ? 'active' : ''}`}
             onClick={() => setHerbsOnly(!herbsOnly)}
+            style={{ fontWeight: herbsOnly ? 600 : 400 }}
           >
-            <Leaf size={14} /> Herbs & Spices
+            <Leaf size={13} /> Herbs & Spices
           </button>
 
           <button
-            className={`btn ${cognitiveOnly ? 'btn-primary' : 'btn-ghost'}`}
-            style={{ padding: '6px 12px', fontSize: '12px' }}
+            className={`button-utility ${cognitiveOnly ? 'active' : ''}`}
             onClick={() => setCognitiveOnly(!cognitiveOnly)}
+            style={{ fontWeight: cognitiveOnly ? 600 : 400 }}
           >
-            <Sparkles size={14} /> Cognitive Health
+            <Sparkles size={13} /> Cognitive Health
           </button>
         </div>
 
         <div className="toolbar-right">
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-            Showing <strong>{filteredData.length}</strong> of {data.length}
+          <span style={{ fontSize: '13px', color: 'var(--ink-muted)' }}>
+            <strong>{filteredData.length}</strong> of {data.length}
           </span>
 
-          <div className="view-toggle-group">
+          <div className="view-toggle-box">
             <button
               className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
               onClick={() => setViewMode('table')}
-              title="Table Grid View"
+              title="Table view"
             >
-              <TableIcon size={16} />
+              <TableIcon size={14} />
             </button>
             <button
               className={`view-toggle-btn ${viewMode === 'cards' ? 'active' : ''}`}
               onClick={() => setViewMode('cards')}
-              title="Visual Cards View"
+              title="Cards view"
             >
-              <LayoutGrid size={16} />
+              <LayoutGrid size={14} />
             </button>
           </div>
         </div>
       </div>
 
-      {/* View Mode: Table */}
+      {/* View: Table */}
       {viewMode === 'table' ? (
-        <div className="table-container">
-          <div className="table-wrapper">
-            <table className="data-table">
+        <div className="table-card">
+          <div className="table-scroll">
+            <table className="notion-table">
               <thead>
                 <tr>
                   <th className="sortable" onClick={() => handleSort('company_name')}>
-                    Company Name {sortBy === 'company_name' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                    Company Name {sortBy === 'company_name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
                   </th>
                   <th className="sortable" onClick={() => handleSort('primary_business_activity')}>
-                    Primary Activity {sortBy === 'primary_business_activity' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                    Primary Activity {sortBy === 'primary_business_activity' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
                   </th>
                   <th>Categories</th>
                   <th>Sales Markets</th>
                   <th className="sortable" onClick={() => handleSort('ingredients_count')}>
-                    Ingredients {sortBy === 'ingredients_count' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                    Ingredients {sortBy === 'ingredients_count' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
                   </th>
                   <th className="sortable" onClick={() => handleSort('finished_products_count')}>
-                    Finished {sortBy === 'finished_products_count' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                    Finished {sortBy === 'finished_products_count' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
                   </th>
-                  <th>Address & Location</th>
-                  <th>Contact Info</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                  <th>Address</th>
+                  <th>Contact</th>
+                  <th style={{ textAlign: 'right' }}>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredData.map((item) => (
                   <tr key={item.id} onClick={() => setSelectedCompany(item)}>
                     <td>
-                      <strong style={{ color: 'var(--text-primary)', fontSize: '14px' }}>
-                        {item.company_name}
-                      </strong>
-                      <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
+                      <strong style={{ color: 'var(--ink)' }}>{item.company_name}</strong>
+                      <div style={{ display: 'flex', gap: '4px', marginTop: '4px' }}>
                         {item.has_herbs_and_spices && (
-                          <span className="badge badge-amber">Herbs & Spices</span>
+                          <span className="badge-pill orange">Herbs & Spices</span>
                         )}
                         {item.in_cognitive_mental_health && (
-                          <span className="badge badge-purple">Cognitive Health</span>
+                          <span className="badge-pill purple">Cognitive</span>
                         )}
                       </div>
                     </td>
                     <td>
-                      <span className="badge badge-cyan">{item.primary_business_activity}</span>
+                      <span className="badge-pill sky">{item.primary_business_activity}</span>
                     </td>
-                    <td style={{ maxWidth: '240px' }}>
+                    <td style={{ maxWidth: '220px' }}>
                       <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {item.categories}
                       </div>
                     </td>
-                    <td style={{ maxWidth: '200px' }}>
-                      <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-secondary)' }}>
+                    <td style={{ maxWidth: '180px' }}>
+                      <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--ink-secondary)' }}>
                         {item.sales_markets}
                       </div>
                     </td>
                     <td>
-                      <span className="badge badge-emerald">{item.ingredients_count}</span>
+                      <span className="badge-pill green">{item.ingredients_count}</span>
                     </td>
                     <td>
-                      <span className="badge badge-gray">{item.finished_products_count}</span>
+                      <span className="badge-pill neutral">{item.finished_products_count}</span>
                     </td>
-                    <td style={{ maxWidth: '220px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}>
-                        <MapPin size={13} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+                    <td style={{ maxWidth: '200px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px' }}>
+                        <MapPin size={12} style={{ color: 'var(--ink-muted)', flexShrink: 0 }} />
                         <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {item.address}
                         </span>
@@ -341,9 +327,9 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
                             href={`mailto:${item.email}`}
                             title={item.email}
                             onClick={(e) => e.stopPropagation()}
-                            style={{ color: 'var(--text-muted)' }}
+                            style={{ color: 'var(--ink-muted)' }}
                           >
-                            <Mail size={15} />
+                            <Mail size={14} />
                           </a>
                         )}
                         {item.telephone && (
@@ -351,9 +337,9 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
                             href={`tel:${item.telephone}`}
                             title={item.telephone}
                             onClick={(e) => e.stopPropagation()}
-                            style={{ color: 'var(--text-muted)' }}
+                            style={{ color: 'var(--ink-muted)' }}
                           >
-                            <Phone size={15} />
+                            <Phone size={14} />
                           </a>
                         )}
                         {item.website && (
@@ -363,23 +349,22 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
                             rel="noreferrer"
                             title={item.website}
                             onClick={(e) => e.stopPropagation()}
-                            style={{ color: 'var(--accent-cyan)' }}
+                            style={{ color: 'var(--primary)' }}
                           >
-                            <Globe size={15} />
+                            <Globe size={14} />
                           </a>
                         )}
                       </div>
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <button
-                        className="btn btn-ghost"
-                        style={{ padding: '4px 8px', fontSize: '12px' }}
+                        className="button-utility"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedCompany(item);
                         }}
                       >
-                        <Eye size={13} /> View
+                        <Eye size={12} /> View
                       </button>
                     </td>
                   </tr>
@@ -389,41 +374,41 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
           </div>
         </div>
       ) : (
-        /* View Mode: Cards */
+        /* View: Cards */
         <div className="cards-grid">
           {filteredData.map((item) => (
-            <div key={item.id} className="data-card" onClick={() => setSelectedCompany(item)}>
-              <div className="card-image-wrap" style={{ height: '140px' }}>
+            <div key={item.id} className="feature-card" onClick={() => setSelectedCompany(item)}>
+              <div className="card-media" style={{ height: '130px' }}>
                 <img src={item.logo_url} alt={item.company_name} loading="lazy" />
-                <div className="card-badge-overlay">
+                <div style={{ position: 'absolute', top: '8px', right: '8px', display: 'flex', gap: '4px' }}>
                   {item.has_herbs_and_spices && (
-                    <span className="badge badge-amber">Herbs & Spices</span>
+                    <span className="badge-pill orange">Herbs</span>
                   )}
                   {item.in_cognitive_mental_health && (
-                    <span className="badge badge-purple">Cognitive</span>
+                    <span className="badge-pill purple">Cognitive</span>
                   )}
                 </div>
               </div>
 
               <div className="card-body">
                 <div className="card-title">{item.company_name}</div>
-                <div className="card-meta-row">
-                  <span className="badge badge-cyan">{item.primary_business_activity}</span>
+                <div className="card-meta-line">
+                  <span className="badge-pill sky">{item.primary_business_activity}</span>
                   <span>•</span>
                   <span>{item.ingredients_count} Ingredients</span>
                 </div>
 
-                <div className="card-description">
+                <div className="card-desc">
                   {item.company_description}
                 </div>
 
-                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                <div style={{ fontSize: '13px', color: 'var(--ink-secondary)', marginBottom: '12px' }}>
                   <strong>Categories:</strong> {item.categories}
                 </div>
 
                 <div className="card-footer">
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                    <MapPin size={13} style={{ display: 'inline', marginRight: '4px' }} />
+                  <div style={{ fontSize: '12px', color: 'var(--ink-muted)' }}>
+                    <MapPin size={12} style={{ display: 'inline', marginRight: '4px' }} />
                     {item.address.split(',').pop()?.trim()}
                   </div>
 
@@ -431,8 +416,7 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
                     href={item.website}
                     target="_blank"
                     rel="noreferrer"
-                    className="btn btn-secondary"
-                    style={{ fontSize: '12px', padding: '6px 12px' }}
+                    className="button-utility"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <span>Website</span>
@@ -450,84 +434,86 @@ export default function IngredientsExplorer({ data, source, onSyncSupabase, isSy
         <div className="modal-overlay" onClick={() => setSelectedCompany(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setSelectedCompany(null)}>
-              <X size={20} />
+              <X size={18} />
             </button>
 
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                <span className="badge badge-cyan">{selectedCompany.primary_business_activity}</span>
+            <div style={{ marginBottom: '18px' }}>
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+                <span className="badge-pill sky">{selectedCompany.primary_business_activity}</span>
                 {selectedCompany.has_herbs_and_spices && (
-                  <span className="badge badge-amber">Herbs & Spices</span>
+                  <span className="badge-pill orange">Herbs & Spices</span>
                 )}
                 {selectedCompany.in_cognitive_mental_health && (
-                  <span className="badge badge-purple">Cognitive Health</span>
+                  <span className="badge-pill purple">Cognitive Health</span>
                 )}
               </div>
-              <h2 style={{ fontSize: '22px', fontWeight: '700' }}>{selectedCompany.company_name}</h2>
-              <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
+              <h2 style={{ fontSize: '22px', fontWeight: '700', letterSpacing: '-0.5px' }}>
+                {selectedCompany.company_name}
+              </h2>
+              <div style={{ fontSize: '13px', color: 'var(--ink-muted)', marginTop: '4px' }}>
                 ID: {selectedCompany.id} • Markets: {selectedCompany.sales_markets}
               </div>
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                COMPANY PROFILE & OVERVIEW
+            <div style={{ marginBottom: '16px' }}>
+              <h4 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
+                Company Profile
               </h4>
-              <p style={{ background: 'var(--bg-surface-elevated)', padding: '14px', borderRadius: 'var(--radius-md)', fontSize: '13px', lineHeight: '1.6' }}>
+              <p style={{ background: 'var(--canvas-soft)', padding: '12px', borderRadius: 'var(--rounded-md)', border: '1px solid var(--hairline)', fontSize: '14px', lineHeight: '1.6' }}>
                 {selectedCompany.company_description}
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-              <div style={{ background: 'var(--bg-surface-elevated)', padding: '14px', borderRadius: 'var(--radius-md)' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Delivery Formats</span>
-                <div style={{ fontWeight: '500', fontSize: '13px', marginTop: '4px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+              <div style={{ background: 'var(--canvas-soft)', padding: '12px', borderRadius: 'var(--rounded-md)', border: '1px solid var(--hairline)' }}>
+                <span style={{ fontSize: '11px', color: 'var(--ink-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Delivery Formats</span>
+                <div style={{ fontWeight: 500, fontSize: '13px', marginTop: '3px' }}>
                   {selectedCompany.delivery_formats || 'Not Specified'}
                 </div>
               </div>
 
-              <div style={{ background: 'var(--bg-surface-elevated)', padding: '14px', borderRadius: 'var(--radius-md)' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Upcoming Trade Events</span>
-                <div style={{ fontWeight: '500', fontSize: '13px', marginTop: '4px' }}>
+              <div style={{ background: 'var(--canvas-soft)', padding: '12px', borderRadius: 'var(--rounded-md)', border: '1px solid var(--hairline)' }}>
+                <span style={{ fontSize: '11px', color: 'var(--ink-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Trade Events</span>
+                <div style={{ fontWeight: 500, fontSize: '13px', marginTop: '3px' }}>
                   {selectedCompany.events || 'Fi Europe, Vitafoods'}
                 </div>
               </div>
             </div>
 
             <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                VERIFIED CONTACT DETAILS
+              <h4 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
+                Contact Information
               </h4>
-              <div style={{ background: 'var(--bg-surface-elevated)', padding: '14px', borderRadius: 'var(--radius-md)', display: 'grid', gap: '10px', fontSize: '13px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <MapPin size={16} style={{ color: 'var(--text-muted)' }} />
+              <div style={{ background: 'var(--canvas-soft)', padding: '12px', borderRadius: 'var(--rounded-md)', border: '1px solid var(--hairline)', display: 'grid', gap: '8px', fontSize: '13px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <MapPin size={14} style={{ color: 'var(--ink-muted)' }} />
                   <span>{selectedCompany.address}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Mail size={16} style={{ color: 'var(--text-muted)' }} />
-                  <a href={`mailto:${selectedCompany.email}`} style={{ color: 'var(--accent-cyan)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Mail size={14} style={{ color: 'var(--ink-muted)' }} />
+                  <a href={`mailto:${selectedCompany.email}`} style={{ color: 'var(--primary)' }}>
                     {selectedCompany.email}
                   </a>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Phone size={16} style={{ color: 'var(--text-muted)' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Phone size={14} style={{ color: 'var(--ink-muted)' }} />
                   <span>{selectedCompany.telephone}</span>
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-              <button className="btn btn-secondary" onClick={() => setSelectedCompany(null)}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+              <button className="button-utility" onClick={() => setSelectedCompany(null)}>
                 Close
               </button>
               <a
                 href={selectedCompany.website}
                 target="_blank"
                 rel="noreferrer"
-                className="btn btn-primary"
+                className="button-primary"
               >
-                <span>Visit Official Site</span>
-                <ExternalLink size={14} />
+                <span>Visit Company Site</span>
+                <ExternalLink size={13} />
               </a>
             </div>
           </div>

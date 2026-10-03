@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  Database, ShieldCheck, Check, Copy, ExternalLink, RefreshCw, 
-  UploadCloud, AlertCircle, X, Key, Globe, Terminal, Sparkles 
+  Database, Check, Copy, ExternalLink, RefreshCw, 
+  UploadCloud, AlertCircle, X, Key, Globe, Terminal 
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { 
@@ -80,7 +80,7 @@ export default function SupabaseSyncModal({ isOpen, onClose, onRefreshStatus, di
     }
   };
 
-  const schemaSql = `-- Run this in your Supabase SQL Editor:
+  const schemaSql = `-- PostgreSQL / Supabase Migration
 CREATE TABLE IF NOT EXISTS public.disney_cruises (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
@@ -142,29 +142,31 @@ CREATE POLICY "public_insert_ingredients" ON public.ingredients_network FOR INSE
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '720px' }}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '680px' }}>
         <button className="modal-close-btn" onClick={onClose}>
-          <X size={20} />
+          <X size={18} />
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-          <div className="brand-logo-badge" style={{ width: '42px', height: '42px' }}>
-            <Database size={22} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+          <div className="brand-icon-box" style={{ width: '36px', height: '36px' }}>
+            <Database size={18} />
           </div>
           <div>
-            <h2 style={{ fontSize: '20px', fontWeight: '700' }}>Supabase Persistence Hub</h2>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-              Configure your free Supabase cloud instance or sync extracted tables in one click.
+            <h2 style={{ fontSize: '20px', fontWeight: '700', letterSpacing: '-0.3px' }}>
+              Supabase Configuration
+            </h2>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)' }}>
+              Configure your remote Supabase credentials or push local records.
             </p>
           </div>
         </div>
 
         {/* Credentials Form */}
-        <div style={{ background: 'var(--bg-surface-elevated)', padding: '20px', borderRadius: 'var(--radius-md)', marginBottom: '20px' }}>
+        <div style={{ background: 'var(--canvas-soft)', padding: '16px', borderRadius: 'var(--rounded-md)', border: '1px solid var(--hairline)', marginBottom: '18px' }}>
           <div className="form-group">
             <label className="form-label">
-              <Globe size={13} style={{ display: 'inline', marginRight: '6px' }} />
-              Supabase Project URL
+              <Globe size={12} style={{ display: 'inline', marginRight: '5px' }} />
+              Project URL
             </label>
             <input
               type="text"
@@ -177,8 +179,8 @@ CREATE POLICY "public_insert_ingredients" ON public.ingredients_network FOR INSE
 
           <div className="form-group">
             <label className="form-label">
-              <Key size={13} style={{ display: 'inline', marginRight: '6px' }} />
-              Supabase Anon Public API Key
+              <Key size={12} style={{ display: 'inline', marginRight: '5px' }} />
+              Anon Public API Key
             </label>
             <input
               type="password"
@@ -189,47 +191,46 @@ CREATE POLICY "public_insert_ingredients" ON public.ingredients_network FOR INSE
             />
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button className="btn btn-primary" onClick={handleSave}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button className="button-primary" onClick={handleSave}>
                 Save & Connect
               </button>
-              <button className="btn btn-secondary" onClick={handleTestConnection} disabled={isTesting}>
-                <RefreshCw size={14} className={isTesting ? 'animate-spin' : ''} />
+              <button className="button-utility" onClick={handleTestConnection} disabled={isTesting}>
+                <RefreshCw size={13} className={isTesting ? 'animate-spin' : ''} />
                 {isTesting ? 'Testing...' : 'Test Connection'}
               </button>
             </div>
 
             {currentCreds.isCustom && (
-              <button className="btn btn-ghost" onClick={handleClear} style={{ color: 'var(--accent-rose)' }}>
-                Reset to Default
+              <button className="button-utility" onClick={handleClear} style={{ color: 'var(--accent-orange)' }}>
+                Reset
               </button>
             )}
           </div>
 
-          {/* Test Status feedback */}
           {testResult && (
             <div
               style={{
-                marginTop: '14px',
-                padding: '12px 14px',
-                borderRadius: 'var(--radius-sm)',
+                marginTop: '12px',
+                padding: '10px 12px',
+                borderRadius: 'var(--rounded-xs)',
                 fontSize: '13px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
-                background: testResult.success ? 'rgba(16, 185, 129, 0.12)' : 'rgba(244, 63, 94, 0.12)',
-                border: `1px solid ${testResult.success ? 'rgba(16, 185, 129, 0.3)' : 'rgba(244, 63, 94, 0.3)'}`,
-                color: testResult.success ? 'var(--accent-emerald)' : 'var(--accent-rose)'
+                gap: '8px',
+                background: testResult.success ? '#e7f8eb' : '#ffedf8',
+                border: `1px solid ${testResult.success ? '#bceec6' : '#ffc2eb'}`,
+                color: testResult.success ? '#0d6e22' : '#b30074'
               }}
             >
-              {testResult.success ? <Check size={16} /> : <AlertCircle size={16} />}
+              {testResult.success ? <Check size={15} /> : <AlertCircle size={15} />}
               <div style={{ flex: 1 }}>
-                <strong>{testResult.success ? 'Connection Successful' : 'Connection Failed'}:</strong>{' '}
+                <strong>{testResult.success ? 'Success' : 'Error'}:</strong>{' '}
                 {testResult.message}
                 {testResult.latencyMs > 0 && (
-                  <span style={{ marginLeft: '8px', color: 'var(--text-muted)' }}>
-                    ({testResult.latencyMs}ms latency)
+                  <span style={{ marginLeft: '6px', color: 'var(--ink-muted)' }}>
+                    ({testResult.latencyMs}ms)
                   </span>
                 )}
               </div>
@@ -238,38 +239,38 @@ CREATE POLICY "public_insert_ingredients" ON public.ingredients_network FOR INSE
         </div>
 
         {/* Sync Actions */}
-        <div style={{ marginBottom: '20px' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '10px' }}>
-            One-Click Data Sync to Cloud
+        <div style={{ marginBottom: '18px' }}>
+          <h3 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>
+            Push Data to Cloud Tables
           </h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <button
-              className="btn btn-secondary"
-              style={{ padding: '12px', justifyContent: 'flex-start', textAlign: 'left' }}
+              className="button-utility"
+              style={{ padding: '10px', justifyContent: 'flex-start', textAlign: 'left' }}
               onClick={handleSyncDisney}
               disabled={isSyncingDisney}
             >
-              <UploadCloud size={18} style={{ color: 'var(--accent-cyan)' }} />
+              <UploadCloud size={16} style={{ color: 'var(--primary)', flexShrink: 0 }} />
               <div>
-                <div style={{ fontWeight: '600' }}>Sync Disney Cruises</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                  {isSyncingDisney ? 'Pushing records...' : `Push ${disneyData.length} records to Supabase`}
+                <div style={{ fontWeight: 600, fontSize: '13px' }}>Push Disney Cruises</div>
+                <div style={{ fontSize: '11px', color: 'var(--ink-muted)' }}>
+                  {isSyncingDisney ? 'Pushing...' : `${disneyData.length} records to table`}
                 </div>
               </div>
             </button>
 
             <button
-              className="btn btn-secondary"
-              style={{ padding: '12px', justifyContent: 'flex-start', textAlign: 'left' }}
+              className="button-utility"
+              style={{ padding: '10px', justifyContent: 'flex-start', textAlign: 'left' }}
               onClick={handleSyncIngredients}
               disabled={isSyncingIng}
             >
-              <UploadCloud size={18} style={{ color: 'var(--accent-emerald)' }} />
+              <UploadCloud size={16} style={{ color: 'var(--accent-green)', flexShrink: 0 }} />
               <div>
-                <div style={{ fontWeight: '600' }}>Sync Ingredients Network</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                  {isSyncingIng ? 'Pushing records...' : `Push ${ingredientsData.length} suppliers to Supabase`}
+                <div style={{ fontWeight: 600, fontSize: '13px' }}>Push Ingredients</div>
+                <div style={{ fontSize: '11px', color: 'var(--ink-muted)' }}>
+                  {isSyncingIng ? 'Pushing...' : `${ingredientsData.length} suppliers to table`}
                 </div>
               </div>
             </button>
@@ -278,12 +279,13 @@ CREATE POLICY "public_insert_ingredients" ON public.ingredients_network FOR INSE
           {syncMessage && (
             <div
               style={{
-                marginTop: '12px',
-                padding: '10px 14px',
-                borderRadius: 'var(--radius-sm)',
+                marginTop: '10px',
+                padding: '8px 12px',
+                borderRadius: 'var(--rounded-xs)',
                 fontSize: '13px',
-                background: syncMessage.type === 'success' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(244, 63, 94, 0.12)',
-                color: syncMessage.type === 'success' ? 'var(--accent-emerald)' : 'var(--accent-rose)'
+                background: syncMessage.type === 'success' ? '#e7f8eb' : '#ffedf8',
+                color: syncMessage.type === 'success' ? '#0d6e22' : '#b30074',
+                border: `1px solid ${syncMessage.type === 'success' ? '#bceec6' : '#ffc2eb'}`
               }}
             >
               {syncMessage.text}
@@ -291,37 +293,36 @@ CREATE POLICY "public_insert_ingredients" ON public.ingredients_network FOR INSE
           )}
         </div>
 
-        {/* SQL Schema Snippet */}
+        {/* SQL Schema Preview */}
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-              <Terminal size={12} style={{ display: 'inline', marginRight: '6px' }} />
-              Database DDL Schema (Run in Supabase SQL Editor)
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-muted)', textTransform: 'uppercase' }}>
+              <Terminal size={11} style={{ display: 'inline', marginRight: '4px' }} />
+              SQL DDL Script
             </span>
-            <button className="btn btn-ghost" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={handleCopySql}>
-              {copiedSql ? <Check size={12} /> : <Copy size={12} />}
-              <span>{copiedSql ? 'Copied' : 'Copy SQL'}</span>
+            <button className="button-utility" onClick={handleCopySql} style={{ padding: '2px 8px', fontSize: '11px' }}>
+              {copiedSql ? <Check size={11} /> : <Copy size={11} />}
+              <span>{copiedSql ? 'Copied' : 'Copy'}</span>
             </button>
           </div>
 
-          <pre className="code-snippet" style={{ maxHeight: '180px', overflowY: 'auto' }}>
+          <pre className="code-box" style={{ maxHeight: '160px' }}>
             {schemaSql}
           </pre>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
           <a
             href="https://supabase.com/dashboard"
             target="_blank"
             rel="noreferrer"
-            className="btn btn-ghost"
-            style={{ fontSize: '12px' }}
+            className="button-utility"
           >
             <span>Supabase Dashboard</span>
-            <ExternalLink size={13} />
+            <ExternalLink size={12} />
           </a>
 
-          <button className="btn btn-secondary" onClick={onClose}>
+          <button className="button-secondary" onClick={onClose}>
             Done
           </button>
         </div>

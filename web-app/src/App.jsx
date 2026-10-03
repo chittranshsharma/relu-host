@@ -14,7 +14,7 @@ import {
 import confetti from 'canvas-confetti';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('disney'); // 'disney' | 'ingredients' | 'answers' | 'supabase'
+  const [activeTab, setActiveTab] = useState('disney');
   const [disneyData, setDisneyData] = useState([]);
   const [sourceDisney, setSourceDisney] = useState('local');
   const [ingredientsData, setIngredientsData] = useState([]);
@@ -25,7 +25,6 @@ export default function App() {
   const [notification, setNotification] = useState(null);
 
   const loadData = async () => {
-    // Check Supabase connection health
     try {
       const ping = await pingSupabase();
       setSupabaseStatus({ connected: ping.success && ping.tableReady, latencyMs: ping.latencyMs || 0 });
@@ -33,12 +32,10 @@ export default function App() {
       setSupabaseStatus({ connected: false, latencyMs: 0 });
     }
 
-    // Fetch Disney Cruises
     const disneyRes = await fetchDisneyCruisesData();
     setDisneyData(disneyRes.data || []);
     setSourceDisney(disneyRes.source);
 
-    // Fetch Ingredients
     const ingRes = await fetchIngredientsData();
     setIngredientsData(ingRes.data || []);
     setSourceIng(ingRes.source);
@@ -61,7 +58,7 @@ export default function App() {
     } catch (err) {
       setNotification({
         type: 'error',
-        text: `Sync error: ${err.message}. Open 'Connect DB' to verify credentials.`
+        text: `Sync error: ${err.message}. Open Settings to verify credentials.`
       });
       setIsSettingsOpen(true);
     } finally {
@@ -71,7 +68,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -79,27 +76,27 @@ export default function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
-      <main className="app-container">
+      <main className="app-container" style={{ flex: 1 }}>
         {notification && (
           <div
             style={{
-              padding: '12px 18px',
-              borderRadius: 'var(--radius-md)',
-              marginBottom: '20px',
+              padding: '10px 16px',
+              borderRadius: 'var(--rounded-md)',
+              marginBottom: '18px',
               fontSize: '13px',
-              fontWeight: '500',
+              fontWeight: 500,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              background: notification.type === 'success' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(244, 63, 94, 0.15)',
-              border: `1px solid ${notification.type === 'success' ? 'rgba(16, 185, 129, 0.35)' : 'rgba(244, 63, 94, 0.35)'}`,
-              color: notification.type === 'success' ? 'var(--accent-emerald)' : 'var(--accent-rose)'
+              background: notification.type === 'success' ? '#e7f8eb' : '#ffedf8',
+              border: `1px solid ${notification.type === 'success' ? '#bceec6' : '#ffc2eb'}`,
+              color: notification.type === 'success' ? '#0d6e22' : '#b30074'
             }}
           >
             <span>{notification.text}</span>
             <button
               onClick={() => setNotification(null)}
-              style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: '14px' }}
             >
               ✕
             </button>
@@ -151,13 +148,13 @@ export default function App() {
         ingredientsData={ingredientsData}
       />
 
-      <footer style={{ borderTop: '1px solid var(--border-subtle)', padding: '28px 24px', textAlign: 'center', fontSize: '13px', color: 'var(--text-muted)' }}>
-        <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+      <footer className="site-footer">
+        <div className="site-footer-inner">
           <div>
             <strong>Relu Consultancy Hiring Challenge</strong> • Full-Time Data Extraction Engineer (FTE)
           </div>
           <div>
-            Built with React, Vite & Supabase • Persistence & Presentation Suite
+            Built with React, Vite & Supabase • Notion Design System
           </div>
         </div>
       </footer>
